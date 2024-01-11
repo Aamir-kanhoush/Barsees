@@ -93,8 +93,12 @@ public class Board {
             if (isMatbokh(playRock, totalSteps)) {
                 System.out.println(" DDAAAAAaaaaaaaaaaaaaaaaaaaaaaaaMmmmmmmmmmmmmmmmmmmmmmN");
                 playRock.finish = true;
-                if (playRock.isInTheKitchen) {
-                    removePieceFromPlayerKitchen(playRock.getPosition(), playRock);
+                for (int i = 0; i < road.length; i++) {
+                    if (road[i] != null)
+                    {
+                        if (road[i].equals(playRock))
+                            removePieceFromPlayerKitchen(playRock.getPosition(),playRock);
+                    }
                 }
                 playRock.setPosition(-1);
                 System.out.println("مبروك عليك ربع مليون دولار");
@@ -132,7 +136,7 @@ public class Board {
 
         if (playRock.counter + totalSteps > path.length - 1 && playRock.getPlayer().id == 1) {
             playRock.tastee7 = true;
-//            playRock.isInTheKitchen = true;
+            playRock.isInTheKitchen = true;
             removePieceFromPath(playRock.getPosition());
             int steps = playRock.counter + totalSteps - (road.length - 1);
             playRock.setPosition(-1);

@@ -136,31 +136,42 @@ public class State {
         // Check if the rock has finished the game
         if (rock.finish) {
             System.out.println("finished");
-            result= false;
+            result = false;
         }
 
         // Check if the rock is in the kitchen and if it can exit or move within the kitchen
-        if (rock.isInTheKitchen && !rock.tastee7) {
+        if (rock.tastee7) {
             if (rock.getPosition() + steps <= board.getPlayerKitchen(rock).length) {
                 System.out.println("rock is in the kitchen and if it can exit or move within the kitchen");
-                result= true;
-            }else result= false;
-        }
-        //Check if the rock is in path and it can reenter the kitchen
-        if (!rock.isInTheKitchen) {
-            if (rock.getPlayer().id == 1 && rock.counter + steps <= board.getPlayerKitchen(rock).length + (board.getPath().length - rock.getPosition())) {
-                System.out.println("rock is in path and it can reenter the kitchen");
-                result= true;
-            } else
-                System.out.println("the else if rock is in path and it can reenter the kitchen");
-            if(rock.counter + steps <= board.getPlayerKitchen(rock).length + (board.getPath().length - rock.getPosition() - 1)){
-                result=false;
+                result = true;
+            } else return false;
+            if (!rock.tastee7) {
+                if (rock.getPlayer().id == 1 && rock.counter + steps <= board.getPlayerKitchen(rock).length + (board.getPath().length - rock.getPosition())) {
+                    System.out.println("rock is in path and it can reenter the kitchen");//its working
+                    result = true;
+                } else if (steps <= board.getPlayerKitchen(rock).length +
+                        (board.getPath().length - rock.counter + 1)) {
+                    result = true;
+                } else return false;
+            }
+        } else {
+            if (!rock.tastee7) {
+                if (rock.getPlayer().id == 1 && steps <= board.getPlayerKitchen(rock).length +
+                        (board.getPath().length - rock.getPosition())) {
+                    System.out.println("rock is in path and it can reenter the kitchen");//its working
+                    result = true;
+                } else if (rock.getPlayer().id ==2 && steps <= board.getPlayerKitchen(rock).length +
+                        (board.getPath().length - rock.counter + 1)) {
+                    result = true;
+                } else return false;
             }
         }
+        //Check if the rock is in path and it can reenter the kitchen
+
 
         // If none of the above conditions are met, the rock cannot move
         System.out.println("none of the above conditions are met, the rock cannot move");
-        result= true;
+        result = true;
         return result;
     }
 
