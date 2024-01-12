@@ -11,7 +11,7 @@ public class Game {
     public Game() {
         this.turn = true;
         this.scanner = new Scanner(System.in);
-        this.board = new Board(12, 4);
+        this.board = new Board(69, 7);
         this.player1 = new Player("EMPLOYEE", board, 1);
         this.player2 = new Player("THE Arsis", board, 2);
     }
