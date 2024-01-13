@@ -335,18 +335,19 @@ public class Game {
         DiceRolls rand2 = new DiceRolls();
         rand2.rollDice();
 
-        Player user = turn ? player1 : player2;
-        Player computer = turn ? player2 : player1;
+        State state = new State(board,player2,player1,rand2,rand2.countOnesAndNameState());
 
+        // Define the maximum depth of the game tree
+        int maxDepth = 3; // Change this value according to your needs
 
-        if (computer.hasWon(computer.getPlayRocks()))
-        {
-            scanner.close();
-            System.out.println("sahozy : " + computer.getName() + " has won the game!");
-            // break;
-        }
-        handleDiceRollAndMoveForComputer(user, computer, rand2);
-
+        // Determine whether the computer is the maximizing player
+        boolean isMaximizingPlayer = false; // The computer is always the maximizing player
+        ExpectimaxAI ai = new ExpectimaxAI();
+        // Call the expectiminimax method
+        float bestScore = ai.expectiminimax(state, maxDepth, isMaximizingPlayer);
+        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh " + bestScore);
+        // Use the best score to make the move
+        // ...
 
 
     }

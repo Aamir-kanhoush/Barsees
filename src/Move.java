@@ -5,7 +5,7 @@ public class Move {
     public static void DoMove(PlayRock playRock, Board board, String diceResult) {
         String x = diceResult;
         boolean aa;
-        State temp=new State(board,playRock.getPlayer(),playRock.getPlayer(),new DiceRolls());
+        State temp=new State(board,playRock.getPlayer(),playRock.getPlayer(),new DiceRolls(),new DiceRolls().countOnesAndNameState());
         switch (x) {
             case "Dest": {
                 if (playRock.isInTheKitchen) {
@@ -23,15 +23,15 @@ public class Move {
             break;
             case "Bunja": {
                 if (playRock.isInTheKitchen) {
-                    aa=temp.canMoveRock(playRock,10);
+                    aa=temp.canMoveRock(playRock,25);
                     System.out.println("bunja if : "+aa);
-                    board.movePlayRockInKitchen(playRock, 10, board.getPlayerKitchen(playRock));
+                    board.movePlayRockInKitchen(playRock, 25, board.getPlayerKitchen(playRock));
 
 
                 } else {
-                    aa=temp.canMoveRock(playRock,10);
+                    aa=temp.canMoveRock(playRock,25);
                     System.out.println("bunja else : "+aa);
-                    board.movePlayRockInPath(playRock, 10, board.getPath());
+                    board.movePlayRockInPath(playRock, 25, board.getPath());
 
 
                 }

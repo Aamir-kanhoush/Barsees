@@ -7,8 +7,9 @@ public class State {
     private Player otherPlayer;
     private boolean isPlayer1Turn;
     private DiceRolls diceRolls;
+    String alaa;
 
-    public State(Board board, Player player1, Player player2, DiceRolls diceRolls) {
+    public State(Board board, Player player1, Player player2, DiceRolls diceRolls , String alaa) {
         // Create copies of the players using their copy constructors
         Player copyPlayer1 = new Player(player1);
         Player copyPlayer2 = new Player(player2);
@@ -18,6 +19,7 @@ public class State {
         this.otherPlayer = new Player(player2);
 
         this.diceRolls = diceRolls;
+        this.alaa = alaa;
 
         // Copy the board state including the play rocks
         this.board = new Board(board); // Use the copy constructor
@@ -71,7 +73,8 @@ public class State {
 
 public List<State> getNextStates() {
     List<State> successors = new ArrayList<>();
-    String diceResult = diceRolls.countOnesAndNameState();
+//    String diceResult = diceRolls.countOnesAndNameState();
+    String diceResult = alaa;
     int steps = convertDiceResultToSteps(diceResult);
     System.out.println(diceResult);
     Board newBoard = new Board(this.board);
@@ -92,7 +95,7 @@ public List<State> getNextStates() {
                     Move.DoMove(rock, newBoard1, diceResult);
                     boolean nextPlayerTurn = !this.isPlayer1Turn;
                     Player nextPlayer = nextPlayerTurn ? currentCopy : otherPlayer;
-                    State successorState = new State(newBoard1, currentCopy, otherPlayer, diceRolls);
+                    State successorState = new State(newBoard1, currentCopy, otherPlayer, diceRolls , alaa);
                     successors.add(successorState);
                     System.out.println(successorState);
                 }
@@ -120,7 +123,7 @@ public List<State> getNextStates() {
                             Move.DoMove(rock, newBoard2, diceResult);
                             boolean nextPlayerTurn = !this.isPlayer1Turn;
                             Player nextPlayer = nextPlayerTurn ? currentCopy1 : otherPlayer;
-                            State successorState = new State(newBoard2, currentCopy1, otherPlayer, diceRolls);
+                            State successorState = new State(newBoard2, currentCopy1, otherPlayer, diceRolls,alaa);
                             successors.add(successorState);
                             System.out.println(successorState);
                         }
@@ -133,7 +136,7 @@ public List<State> getNextStates() {
                         if (canMoveRock(currentCopy.getPlayRocks()[i],1 ))
                         {
                             Move.Uncle(currentCopy.getPlayRocks()[i],newBoard,2 );
-                            State successorState = new State(newBoard1, currentCopy, otherPlayer, diceRolls);
+                            State successorState = new State(newBoard1, currentCopy, otherPlayer, diceRolls,alaa);
                             successors.add(successorState);
                             System.out.println(successorState);
                         }
@@ -144,7 +147,7 @@ public List<State> getNextStates() {
                             if (canMoveRock(rock,10 ))
                             {
                                 Move.DoMove(rock,newBoard1,diceResult );
-                                State successorState = new State(newBoard1, currentCopy1, otherPlayer, diceRolls);
+                                State successorState = new State(newBoard1, currentCopy1, otherPlayer, diceRolls,alaa);
                                 successors.add(successorState);
                                 System.out.println(successorState);
                             }
@@ -166,7 +169,7 @@ public List<State> getNextStates() {
             if (canMoveRock(rock,steps ))
             {
                 Move.DoMove(rock,newBoard1,diceResult);
-                State successorState = new State(newBoard1, currentCopy1, otherPlayer, diceRolls);
+                State successorState = new State(newBoard1, currentCopy1, otherPlayer, diceRolls, alaa);
                 successors.add(successorState);
                 System.out.println(successorState);
             }
@@ -181,7 +184,7 @@ public List<State> getNextStates() {
 
 
 
-    private int convertDiceResultToSteps(String diceResult) {
+    public static int convertDiceResultToSteps(String diceResult) {
         // Mapping dice results to steps
         switch (diceResult) {
             case "Dest":
@@ -211,7 +214,10 @@ public List<State> getNextStates() {
         if (rock.finish) {
             result = false;
         }
-
+        if (Rules.isMaksora(board,rock, otherPlayer.getPlayRocks()))
+        {
+            return false;
+        }
         // Check if the rock is in the kitchen and if it can exit or move within the kitchen
         if (rock.tastee7) {
             if (rock.getPosition() + steps <= board.getPlayerKitchen(rock).length) {
@@ -245,7 +251,8 @@ public List<State> getNextStates() {
         return result;
     }
     public boolean canSet(Player player) {
-        String diceResult = diceRolls.countOnesAndNameState();
+//        String diceResult = diceRolls.countOnesAndNameState();
+        String diceResult = alaa;
         if (diceResult.equals("Dest") || diceResult.equals("Bunja")) {
             for (PlayRock rock : player.getPlayRocks()) {
                 if (!rock.finish && rock.getPosition() == -1) {
@@ -282,11 +289,43 @@ public List<State> getNextStates() {
             sb.append("PlayRock: ").append(rock.toString()).append("\n");
         }
         sb.append("Is Player 1's Turn: ").append(isPlayer1Turn).append("\n");
-        sb.append("Dice Rolls: ").append(diceRolls.countOnesAndNameState()).append("\n");
+//        sb.append("Dice Rolls: ").append(diceRolls.countOnesAndNameState()).append("\n");
 //        sb.append("Board:\n").append(board.printBoard());
 
         return sb.toString();
     }
+    public List<State> getNextStatesWithProbabilities() {
+        List<State> allNextStates = new ArrayList<>();
+
+        // Define the probabilities for each dice roll outcome
+        Map<String, Double> probabilities = new HashMap<>();
+        probabilities.put("Dest", 0.1);
+        probabilities.put("Bunja", 0.1);
+        probabilities.put("Shakka", 0.1);
+        probabilities.put("Bara", 0.1);
+        probabilities.put("Arba'a", 0.2);
+        probabilities.put("Thalatha", 0.2);
+        probabilities.put("Duwag", 0.2);
+        System.out.println("raghaddddddddddddddddddddddddddddddddddddd");
+        // For each possible dice roll outcome
+        for (Map.Entry<String, Double> entry : probabilities.entrySet()) {
+            String diceRollOutcome = entry.getKey();
+            System.out.println("llllllllllllllllllllllllllllllllll" + diceRollOutcome);
+            double probability = entry.getValue();
+
+            // Generate the next states based on the dice roll outcome
+            State state = new State(board,getCurrentPlayer(),getOtherPlayer(),null,diceRollOutcome);
+            List<State> nextStates = state.getNextStates();
+
+            // Repeat the next states according to the probability
+            for (int i = 0; i < probability * 100; i++) {
+                allNextStates.addAll(nextStates);
+            }
+        }
+
+        return allNextStates;
+    }
+
 
 }
 

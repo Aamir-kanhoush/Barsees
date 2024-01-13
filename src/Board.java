@@ -1,7 +1,7 @@
 public class Board {
     private PlayRock[] path;
-    private PlayRock[] player1Kitchen;
-    private PlayRock[] player2Kitchen;
+    private static PlayRock[] player1Kitchen;
+    private static PlayRock[] player2Kitchen;
 
     public Board(int pathSize, int kitchenSize) {
         this.path = new PlayRock[pathSize];
@@ -40,7 +40,7 @@ public class Board {
         return path;
     }
 
-    public PlayRock[] getPlayerKitchen(PlayRock playRock) {
+    public static PlayRock[] getPlayerKitchen(PlayRock playRock) {
         if (playRock.getPlayer().id == 1) {
             return player1Kitchen;
         } else {
@@ -204,7 +204,7 @@ public class Board {
 
     }
 
-    public boolean isMatbokh(PlayRock playRock, int totalSteps) {
+    public static boolean isMatbokh(PlayRock playRock, int totalSteps) {
         if (playRock.getPosition() + totalSteps == getPlayerKitchen(playRock).length) {
             return true;
         }

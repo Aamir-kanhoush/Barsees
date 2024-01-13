@@ -31,9 +31,9 @@ public class DiceRolls {
             case 5:
                 return "Bunja";
             case 6:
-                return "Shakka";
-            default:
                 return "Bara";
+            default:
+                return "Shakka";
         }
 //        return "Dest";
     }
