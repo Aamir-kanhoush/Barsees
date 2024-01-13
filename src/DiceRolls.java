@@ -35,6 +35,7 @@ public class DiceRolls {
             default:
                 return "Bara";
         }
+//        return "Dest";
     }
 
     public void printRolls() {

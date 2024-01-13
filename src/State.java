@@ -8,29 +8,23 @@ public class State {
     private boolean isPlayer1Turn;
     private DiceRolls diceRolls;
 
-    public State(Board board, Player player1, Player player2, boolean isPlayer1Turn, DiceRolls diceRolls) {
-        this.board = new Board(board.getPath().length, board.getPlayerKitchen(player1.getPlayRocks()[1]).length);
-
+    public State(Board board, Player player1, Player player2, DiceRolls diceRolls) {
         // Create copies of the players using their copy constructors
         Player copyPlayer1 = new Player(player1);
         Player copyPlayer2 = new Player(player2);
 
         // Assign the copies to the currentPlayer and otherPlayer
-        this.currentPlayer = isPlayer1Turn ? copyPlayer1 : copyPlayer2;
-        this.otherPlayer = isPlayer1Turn ? copyPlayer2 : copyPlayer1;
-        this.isPlayer1Turn = isPlayer1Turn;
+        this.currentPlayer = new Player(player1);
+        this.otherPlayer = new Player(player2);
+
         this.diceRolls = diceRolls;
 
         // Copy the board state including the play rocks
-        copyBoardState(board, this.board);
+        this.board = new Board(board); // Use the copy constructor
     }
 
 
-    private void copyBoardState(Board originalBoard, Board newBoard) {
-        copyPlayRocks(originalBoard.getPath(), this.board.getPath());
-        copyPlayRocks(originalBoard.getPlayerKitchen(new PlayRock(currentPlayer, null)), this.board.getPlayerKitchen(new PlayRock(currentPlayer, null)));
-        copyPlayRocks(originalBoard.getPlayerKitchen(new PlayRock(otherPlayer, null)), this.board.getPlayerKitchen(new PlayRock(otherPlayer, null)));
-    }
+
 
     private void copyPlayRocks(PlayRock[] original, PlayRock[] copy) {
         for (int i = 0; i < original.length; i++) {
@@ -75,43 +69,123 @@ public class State {
         return result;
     }
 
-    public List<State> getNextStates() {
-        int i = 0;
-        List<State> successors = new ArrayList<>();
-        String diceResult = diceRolls.countOnesAndNameState();
-        int steps = convertDiceResultToSteps(diceResult);
-
-        for (PlayRock rock : currentPlayer.getPlayRocks()) {
-            if (true) {
-                Board newBoard = new Board(board.getPath().length, board.getPlayerKitchen(currentPlayer.getPlayRocks()[1]).length);
-                copyBoardState(this.board, newBoard);
-                Player currentCopy = new Player(currentPlayer);
-
-                // Create a copy of the PlayRock using the copy constructor
-                System.out.println(diceResult + "pooooooooooooo : " + currentCopy.getPlayRocks()[i]);
-
-                Move.DoMove(currentCopy.getPlayRocks()[i], newBoard, diceResult);
-                System.out.println(diceResult + "pooooooooooooo : " + currentCopy.getPlayRocks()[i]);
-
-                boolean nextPlayerTurn = !this.isPlayer1Turn;
-                Player nextPlayer = nextPlayerTurn ? currentPlayer : otherPlayer;
-
-                State successorState = new State(newBoard, currentCopy, otherPlayer, nextPlayerTurn, diceRolls);
-                successors.add(successorState);
-                successorState.getBoard().printBoard();
-                i++;
+public List<State> getNextStates() {
+    List<State> successors = new ArrayList<>();
+    String diceResult = diceRolls.countOnesAndNameState();
+    int steps = convertDiceResultToSteps(diceResult);
+    System.out.println(diceResult);
+    Board newBoard = new Board(this.board);
+    Player curr = new Player(currentPlayer);
+    if (canSet(currentPlayer)&&!Rules.win(currentPlayer)) {
+        if (!notAllRocksOut() ) {
+            for (int x = 0; x < currentPlayer.getPlayRocks().length; x++) {
+                if (currentPlayer.getPlayRocks()[x].getPosition() == -1) {
+                    Move.Uncle(currentPlayer.getPlayRocks()[x], newBoard, 1);
+                    break;
+                }
             }
-        }
+            for (int i = 0; i < currentPlayer.getPlayRocks().length; i++) {
+                Player currentCopy = new Player(currentPlayer);
+                PlayRock rock = currentCopy.getPlayRocks()[i];
+                if (canMoveRock(rock, steps)) {
+                    Board newBoard1 = new Board(this.board);
+                    Move.DoMove(rock, newBoard1, diceResult);
+                    boolean nextPlayerTurn = !this.isPlayer1Turn;
+                    Player nextPlayer = nextPlayerTurn ? currentCopy : otherPlayer;
+                    State successorState = new State(newBoard1, currentCopy, otherPlayer, diceRolls);
+                    successors.add(successorState);
+                    System.out.println(successorState);
+                }
+            }
+        }else {
 
-        return successors;
+            for (int j = 0; j < 2; j++) {
+                if (j == 0) {
+                    Board newBoard1 = new Board(newBoard);
+                    Player currentCopy = new Player(currentPlayer);
+
+                    for (int x = 0; x < currentCopy.getPlayRocks().length; x++) {
+                        if (currentCopy.getPlayRocks()[x].getPosition() == -1) {
+                            Move.Uncle(currentCopy.getPlayRocks()[x], newBoard1, 1);
+                            break;
+                        }
+                    }
+
+
+                    for (int i = 0; i < currentCopy.getPlayRocks().length; i++) {
+                        Player currentCopy1 = new Player(currentCopy);
+                        PlayRock rock = currentCopy1.getPlayRocks()[i];
+                        if (canMoveRock(rock, steps)) {
+                            Board newBoard2 = new Board(newBoard1);
+                            Move.DoMove(rock, newBoard2, diceResult);
+                            boolean nextPlayerTurn = !this.isPlayer1Turn;
+                            Player nextPlayer = nextPlayerTurn ? currentCopy1 : otherPlayer;
+                            State successorState = new State(newBoard2, currentCopy1, otherPlayer, diceRolls);
+                            successors.add(successorState);
+                            System.out.println(successorState);
+                        }
+                    }
+                }
+                if (j == 1) {
+                    for (int i = 0; i < currentPlayer.getPlayRocks().length; i++) {
+                        Player currentCopy = new Player(currentPlayer);
+                        Board newBoard1 = new Board(newBoard);
+                        if (canMoveRock(currentCopy.getPlayRocks()[i],1 ))
+                        {
+                            Move.Uncle(currentCopy.getPlayRocks()[i],newBoard,2 );
+                            State successorState = new State(newBoard1, currentCopy, otherPlayer, diceRolls);
+                            successors.add(successorState);
+                            System.out.println(successorState);
+                        }
+                        for (int k = 0; k < currentCopy.getPlayRocks().length; k++) {
+                            Player currentCopy1 = new Player(currentCopy);
+                            PlayRock rock = currentCopy1.getPlayRocks()[k];
+                            System.out.println( "can move? " + canMoveRock(rock,10 ));
+                            if (canMoveRock(rock,10 ))
+                            {
+                                Move.DoMove(rock,newBoard1,diceResult );
+                                State successorState = new State(newBoard1, currentCopy1, otherPlayer, diceRolls);
+                                successors.add(successorState);
+                                System.out.println(successorState);
+                            }
+
+                        }
+                    }
+
+                }
+            }
+
+        }
+    } else {
+        Player currentCopy = new Player(currentPlayer);
+        Board newBoard1 = new Board(newBoard);
+        for (int k = 0; k < currentCopy.getPlayRocks().length; k++) {
+
+            Player currentCopy1 = new Player(currentCopy);
+            PlayRock rock = currentCopy1.getPlayRocks()[k];
+            if (canMoveRock(rock,steps ))
+            {
+                Move.DoMove(rock,newBoard1,diceResult);
+                State successorState = new State(newBoard1, currentCopy1, otherPlayer, diceRolls);
+                successors.add(successorState);
+                System.out.println(successorState);
+            }
+
+        }
     }
+
+
+    return successors;
+}
+
+
 
 
     private int convertDiceResultToSteps(String diceResult) {
         // Mapping dice results to steps
         switch (diceResult) {
             case "Dest":
-                return 1;
+                return 10;
             case "Duwag":
                 return 2;
             case "Thalatha":
@@ -119,7 +193,7 @@ public class State {
             case "Arba'a":
                 return 4;
             case "Bara":
-                return 12;
+                return 10;
             case "Shakka":
                 return 6;
             case "Bunja":
@@ -135,7 +209,6 @@ public class State {
         boolean result;
         // Check if the rock has finished the game
         if (rock.finish) {
-            System.out.println("finished");
             result = false;
         }
 
@@ -147,7 +220,6 @@ public class State {
             } else return false;
             if (!rock.tastee7) {
                 if (rock.getPlayer().id == 1 && rock.counter + steps <= board.getPlayerKitchen(rock).length + (board.getPath().length - rock.getPosition())) {
-                    System.out.println("rock is in path and it can reenter the kitchen");//its working
                     result = true;
                 } else if (steps <= board.getPlayerKitchen(rock).length +
                         (board.getPath().length - rock.counter + 1)) {
@@ -155,24 +227,45 @@ public class State {
                 } else return false;
             }
         } else {
-            if (!rock.tastee7) {
+            if (!rock.tastee7 && rock.getPosition() != -1) {
                 if (rock.getPlayer().id == 1 && steps <= board.getPlayerKitchen(rock).length +
                         (board.getPath().length - rock.getPosition())) {
-                    System.out.println("rock is in path and it can reenter the kitchen");//its working
                     result = true;
                 } else if (rock.getPlayer().id ==2 && steps <= board.getPlayerKitchen(rock).length +
                         (board.getPath().length - rock.counter + 1)) {
                     result = true;
                 } else return false;
-            }
+            }else return false;
         }
         //Check if the rock is in path and it can reenter the kitchen
 
 
         // If none of the above conditions are met, the rock cannot move
-        System.out.println("none of the above conditions are met, the rock cannot move");
         result = true;
         return result;
+    }
+    public boolean canSet(Player player) {
+        String diceResult = diceRolls.countOnesAndNameState();
+        if (diceResult.equals("Dest") || diceResult.equals("Bunja")) {
+            for (PlayRock rock : player.getPlayRocks()) {
+                if (!rock.finish && rock.getPosition() == -1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public boolean notAllRocksOut() {
+        for (PlayRock rock : currentPlayer.getPlayRocks()) {
+
+            if (rock.getPosition() != -1) {
+                System.out.println(rock.getPosition());
+                return true;
+            }
+
+
+        }
+        return false;
     }
 
     @Override

@@ -5,7 +5,7 @@ public class Move {
     public static void DoMove(PlayRock playRock, Board board, String diceResult) {
         String x = diceResult;
         boolean aa;
-        State temp=new State(board,playRock.getPlayer(),playRock.getPlayer(),false,new DiceRolls());
+        State temp=new State(board,playRock.getPlayer(),playRock.getPlayer(),new DiceRolls());
         switch (x) {
             case "Dest": {
                 if (playRock.isInTheKitchen) {
@@ -120,7 +120,7 @@ public class Move {
         if (choice == 1) {//new piece of cake
             board.setPieceInPlayerKitchen(0, playRock);
             playRock.setPosition(0);
-            board.printBoard();
+//            board.printBoard();
 
         } else if (choice == 2) {//move one
             if (playRock.isInTheKitchen) {

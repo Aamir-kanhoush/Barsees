@@ -13,16 +13,18 @@ public class Player {
             playRocks[i] = new PlayRock(this, board);
         }
     }
-    public Player(Player another) {
-        this.name = another.name;
-        this.board = another.board; // Assuming Board is immutable or handled separately
-        this.id = another.id;
-        this.playRocks = new PlayRock[another.playRocks.length];
-        for (int i = 0; i < another.playRocks.length; i++) {
-            // Use the copy constructor of PlayRock (which you need to implement)
-            this.playRocks[i] = new PlayRock(another.playRocks[i]);
+    public Player(Player player) {
+        // Copy all fields of the player object
+        this.id = player.id;
+        // ... copy other fields ...
+
+        // Deep copy of playRocks array
+        this.playRocks = new PlayRock[player.playRocks.length];
+        for (int i = 0; i < player.playRocks.length; i++) {
+            this.playRocks[i] = new PlayRock(player.playRocks[i]);
         }
     }
+
 
     public String getName() {
         return name;

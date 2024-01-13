@@ -24,6 +24,17 @@ public class Rules {
         return false;
 
     }
+    public static boolean win(Player player)
+    {
+        for (PlayRock playRock :
+                player.getPlayRocks()) {
+            if (!playRock.finish)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
 
 }

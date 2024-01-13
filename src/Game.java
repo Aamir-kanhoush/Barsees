@@ -20,12 +20,13 @@ public class Game {
         while (true) {
             DiceRolls rand = new DiceRolls();
             rand.rollDice();
+            rand.printState();
+            DiceRolls rand1 = new DiceRolls();
+            rand1.rollDice();
+            rand1.printState();
 
             Player currentPlayer = turn ? player1 : player2;
             Player otherPlayer = turn ? player2 : player1;
-
-//            State state = new State(board,currentPlayer,otherPlayer,true,rand);
-//            List<State> nextStates= state.getNextStates();
             if (currentPlayer.hasWon(currentPlayer.getPlayRocks())) {
                 scanner.close();
                 System.out.println("sahozy : " + currentPlayer.getName() + " has won the game!");
@@ -37,11 +38,10 @@ public class Game {
             if (input == 0) {
                 break;
             } else if (input == 1) {
-                handleDiceRollAndMove(currentPlayer, otherPlayer, rand);
+//                handleDiceRollAndMove(currentPlayer, otherPlayer, rand);
             } else {
                 System.out.println("sahozy : Invalid input!");
             }
-            System.out.println("dddddddddddddddd : " + currentPlayer.getPlayRocks()[0].counter);
 //            turn = !turn;
         }
 
