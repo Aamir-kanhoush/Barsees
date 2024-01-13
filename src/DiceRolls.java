@@ -48,4 +48,8 @@ public class DiceRolls {
         String state = countOnesAndNameState();
         System.out.println(state);
     }
+
+    public String getDiceState() {
+        return countOnesAndNameState();
+    }
 }
