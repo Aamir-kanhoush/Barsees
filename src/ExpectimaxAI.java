@@ -4,30 +4,33 @@ public class ExpectimaxAI {
 
 
 
-    public float expectiminimax(State state, int depth, boolean isMaximizingPlayer) {
+    public State expectiminimax(State state, int depth, boolean isMaximizingPlayer) {
         if (depth == 0 || Player.hasWon(state.getCurrentPlayer().getPlayRocks())) {
-
-
-            return evaluateState(state);
+            return state;
         }
 
         if (isMaximizingPlayer) {
+            State bestState = null;
             float maxValue = Float.NEGATIVE_INFINITY;
-            System.out.println("alaaaaaaaaa");
             for (State childState : state.getNextStates()) {
-                System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr" + maxValue);
-                maxValue = Math.max(maxValue, expectiminimax(childState, depth - 1, false));
-                System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkkkk " + maxValue);
+                State candidateState = expectiminimax(childState, depth - 1, false);
+                float value = evaluateState(candidateState);
+                if (value > maxValue) {
+                    maxValue = value;
+                    bestState = candidateState;
+                }
             }
-            return maxValue;
+            return bestState;
         } else {
-//            System.out.println("alaaaaaaaaa");
             List<State> childStates = state.getNextStatesWithProbabilities();
             float sumValue = 0;
+            State representativeState = null;
             for (State childState : childStates) {
-                sumValue += expectiminimax(childState, depth - 1, true);
+                State candidateState = expectiminimax(childState, depth - 1, true);
+                sumValue += evaluateState(candidateState);
+                representativeState = candidateState; // Just to have a state to return
             }
-            return sumValue / childStates.size();
+            return representativeState; // This is not exactly meaningful in expectiminimax context, as it's a chance node
         }
     }
 

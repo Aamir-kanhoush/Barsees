@@ -344,11 +344,16 @@ public class Game {
         boolean isMaximizingPlayer = true; // The computer is always the maximizing player
         ExpectimaxAI ai = new ExpectimaxAI();
         // Call the expectiminimax method
-        float bestScore = ai.expectiminimax(state, maxDepth, isMaximizingPlayer);
+        State bestScore = ai.expectiminimax(state, maxDepth, isMaximizingPlayer);
         System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh " + bestScore);
-        // Use the best score to make the move
-        // ...
-
+        if (bestScore != null) {
+            board = bestScore.getBoard();
+            player1 = bestScore.getOtherPlayer();
+            player2 = bestScore.getCurrentPlayer();
+            board.printBoard();
+            // Use the best score to make the move
+            // ...
+        }
 
     }
 
