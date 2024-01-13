@@ -15,7 +15,9 @@ public class ExpectimaxAI {
             float maxValue = Float.NEGATIVE_INFINITY;
             System.out.println("alaaaaaaaaa");
             for (State childState : state.getNextStates()) {
+                System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr" + maxValue);
                 maxValue = Math.max(maxValue, expectiminimax(childState, depth - 1, false));
+                System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkkkk " + maxValue);
             }
             return maxValue;
         } else {

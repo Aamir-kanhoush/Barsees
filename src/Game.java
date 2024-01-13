@@ -338,10 +338,10 @@ public class Game {
         State state = new State(board,player2,player1,rand2,rand2.countOnesAndNameState());
 
         // Define the maximum depth of the game tree
-        int maxDepth = 3; // Change this value according to your needs
+        int maxDepth = 2; // Change this value according to your needs
 
         // Determine whether the computer is the maximizing player
-        boolean isMaximizingPlayer = false; // The computer is always the maximizing player
+        boolean isMaximizingPlayer = true; // The computer is always the maximizing player
         ExpectimaxAI ai = new ExpectimaxAI();
         // Call the expectiminimax method
         float bestScore = ai.expectiminimax(state, maxDepth, isMaximizingPlayer);
