@@ -13,12 +13,10 @@ public class Player {
             playRocks[i] = new PlayRock(this, board);
         }
     }
-    public Player(Player player) {
-        // Copy all fields of the player object
-        this.id = player.id;
-        // ... copy other fields ...
 
-        // Deep copy of playRocks array
+    public Player(Player player) {
+        this.id = player.id;
+
         this.playRocks = new PlayRock[player.playRocks.length];
         for (int i = 0; i < player.playRocks.length; i++) {
             this.playRocks[i] = new PlayRock(player.playRocks[i]);
@@ -30,7 +28,7 @@ public class Player {
         return name;
     }
 
-    public PlayRock[]  getPlayRocks() {
+    public PlayRock[] getPlayRocks() {
         return playRocks;
     }
 

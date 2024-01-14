@@ -8,30 +8,27 @@ public class Board {
         this.player1Kitchen = new PlayRock[kitchenSize];
         this.player2Kitchen = new PlayRock[kitchenSize];
     }
+
     public Board(Board other) {
-        // Assuming PlayRock has a copy constructor or a method to create a deep copy
         this.path = new PlayRock[other.path.length];
         this.player1Kitchen = new PlayRock[other.player1Kitchen.length];
         this.player2Kitchen = new PlayRock[other.player2Kitchen.length];
 
-        // Copy each PlayRock from the original Board's path to the new path
         for (int i = 0; i < other.path.length; i++) {
             if (other.path[i] != null) {
-                this.path[i] = new PlayRock(other.path[i]); // This assumes PlayRock has a copy constructor
+                this.path[i] = new PlayRock(other.path[i]);
             }
         }
 
-        // Copy each PlayRock from the original Board's player1Kitchen to the new player1Kitchen
         for (int i = 0; i < other.player1Kitchen.length; i++) {
             if (other.player1Kitchen[i] != null) {
-                this.player1Kitchen[i] = new PlayRock(other.player1Kitchen[i]); // This assumes PlayRock has a copy constructor
+                this.player1Kitchen[i] = new PlayRock(other.player1Kitchen[i]);
             }
         }
 
-        // Copy each PlayRock from the original Board's player2Kitchen to the new player2Kitchen
         for (int i = 0; i < other.player2Kitchen.length; i++) {
             if (other.player2Kitchen[i] != null) {
-                this.player2Kitchen[i] = new PlayRock(other.player2Kitchen[i]); // This assumes PlayRock has a copy constructor
+                this.player2Kitchen[i] = new PlayRock(other.player2Kitchen[i]);
             }
         }
     }
@@ -120,10 +117,9 @@ public class Board {
             if (isMatbokh(playRock, totalSteps)) {
                 playRock.finish = true;
                 for (int i = 0; i < road.length; i++) {
-                    if (road[i] != null)
-                    {
+                    if (road[i] != null) {
                         if (road[i].equals(playRock))
-                            removePieceFromPlayerKitchen(playRock.getPosition(),playRock);
+                            removePieceFromPlayerKitchen(playRock.getPosition(), playRock);
                     }
                 }
                 playRock.setPosition(-1);

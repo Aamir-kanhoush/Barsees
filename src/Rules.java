@@ -24,12 +24,11 @@ public class Rules {
         return false;
 
     }
-    public static boolean win(Player player)
-    {
+
+    public static boolean win(Player player) {
         for (PlayRock playRock :
                 player.getPlayRocks()) {
-            if (!playRock.finish)
-            {
+            if (!playRock.finish) {
                 return false;
             }
         }
@@ -61,7 +60,6 @@ public class Rules {
         return isMaksora;
     }
 
-    // isSafeBlock: to check if the position is in the list of safe blocks
     public static boolean isSafeBlock(int position) {
 
         for (int safeBlock : safeBlocks) {

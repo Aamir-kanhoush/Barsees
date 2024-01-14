@@ -16,6 +16,7 @@ public class Game {
         this.player1 = new Player("EMPLOYEE", board, 1);
         this.player2 = new Player("THE Arsis", board, 2);
     }
+
     public Game(String playerName1, String playerName2) {
         this.turn = true;
         this.scanner = new Scanner(System.in);
@@ -112,7 +113,7 @@ public class Game {
         wel3t.add(rand);
 
         String diceResult = rand.countOnesAndNameState();
-        HandleFrequentDice(diceResult,wel3t,AllRocksInBoard,rand);
+        HandleFrequentDice(diceResult, wel3t, AllRocksInBoard, rand);
 
 
         System.out.println(" wel3t size  :" + wel3t.size());
@@ -120,9 +121,9 @@ public class Game {
             w.printState();
         }
 
-        int counter =0;
+        int counter = 0;
         boolean MultiDice = true;
-        ChooseFrequentDice(MultiDice,wel3t,counter,availableRocks,currentPlayer);
+        ChooseFrequentDice(MultiDice, wel3t, counter, availableRocks, currentPlayer);
 
         if (diceResult.equals("Dest") || diceResult.equals("Bunja")) {
 
@@ -157,8 +158,7 @@ public class Game {
             }
             rockNumber = scanner.nextInt();
             Move.DoMove(availableRocks[rockNumber - 1], board, diceResult);
-        }
-        else {
+        } else {
             for (int i = 0; i < availableRocks.length; i++) {
                 if (!availableRocks[i].finish && availableRocks[i].getPosition() != -1) {
                     System.out.println("Rock " + (i + 1) + ": Position " + availableRocks[i]);
@@ -174,45 +174,44 @@ public class Game {
         board.printBoard();
     }
 
-    private void HandleFrequentDice (String diceResult,List<DiceRolls>wel3t,boolean AllRocksInBoard,DiceRolls rand){
+    private void HandleFrequentDice(String diceResult, List<DiceRolls> wel3t, boolean AllRocksInBoard, DiceRolls rand) {
         while (wel3t.size() < 10 && AllRocksInBoard) {
             diceResult = rand.getDiceState();
             if (diceResult.equals("Shakka") || diceResult.equals("Dest") ||
                     diceResult.equals("Bunja") || diceResult.equals("Bara")) {
 
-                DiceRolls temp = new DiceRolls(); // Create a new DiceRolls object
+                DiceRolls temp = new DiceRolls();
                 System.out.println("Re DiceRoll :");
-                temp.rollDice(); // Roll the dice for the new object
-                diceResult=temp.countOnesAndNameState();
+                temp.rollDice();
+                diceResult = temp.countOnesAndNameState();
 
                 temp.printState();
-                wel3t.add(temp); // Add the new object to the list
+                wel3t.add(temp);
 
                 if (diceResult.equals("Shakka") || diceResult.equals("Dest") ||
                         diceResult.equals("Bunja") || diceResult.equals("Bara")) {
                     DiceRolls temp2 = new DiceRolls();
                     temp2.rollDice();
-                    diceResult=temp2.countOnesAndNameState();
+                    diceResult = temp2.countOnesAndNameState();
 
-                    temp2.printState();// Roll the dice for the new object
-                    wel3t.add(temp2); // Add the new object to the list
-                    rand=temp2;
+                    temp2.printState();
+                    wel3t.add(temp2);
+                    rand = temp2;
 
                 } else {
 
                     break;
                 }
-            }
-            else {
+            } else {
 
                 break;
             }
         }
     }
-    private void ChooseFrequentDice (boolean MultiDice,List<DiceRolls>wel3t,int counter,PlayRock[]availableRocks,Player currentPlayer){
-        while(MultiDice && wel3t.size()>=2){
+
+    private void ChooseFrequentDice(boolean MultiDice, List<DiceRolls> wel3t, int counter, PlayRock[] availableRocks, Player currentPlayer) {
+        while (MultiDice && wel3t.size() >= 2) {
             System.out.println("Couter value befor:" + counter);
-            // Display all DiceRolls in the wel3t list
             System.out.println(" Wel3t OBJECTS : ");
             for (DiceRolls diceRoll : wel3t) {
                 diceRoll.printState();
@@ -224,23 +223,22 @@ public class Game {
                 }
             }
 
-            // Let the player choose a rock
             System.out.println("Choose a rock:");
             int rockChoice = scanner.nextInt();
             PlayRock chosenRock = availableRocks[rockChoice - 1];
-            // Give the player an option to choose a DiceRoll
             System.out.println("Choose a DiceRoll:");
             int diceChoice = scanner.nextInt();
             DiceRolls chosenDiceRoll = wel3t.get(diceChoice);
-            String DS= chosenDiceRoll.countOnesAndNameState();
+            String DS = chosenDiceRoll.countOnesAndNameState();
 
-            Move.DoMove(chosenRock,board,DS);
+            Move.DoMove(chosenRock, board, DS);
 
-            // wel3t.set(diceChoice,chosenDiceRoll);
 
             counter++;
             System.out.println("Couter value after:" + counter);
-            if (counter>=wel3t.size()){MultiDice=false;}
+            if (counter >= wel3t.size()) {
+                MultiDice = false;
+            }
         }
     }
 
@@ -277,7 +275,7 @@ public class Game {
 
         String diceResult = rand.countOnesAndNameState();
         if (diceResult.equals("Dest") || diceResult.equals("Bunja")) {
-            ////////////////////////
+
 
             System.out.println("Sahozy : Add a new rock to the board\n2. Move an available rock 1 position");
             Scanner scanner = new Scanner(System.in);
@@ -324,7 +322,6 @@ public class Game {
     }
 
     private void getComputerMove() {
-//        System.out.println("kkk");
         DiceRolls rand = new DiceRolls();
         rand.rollDice();
         rand.printState();
@@ -352,15 +349,11 @@ public class Game {
         }
         System.out.println("Computer rolled a :");
 
-        State state = new State(board,player2,player1,rand,rand.countOnesAndNameState());
+        State state = new State(board, player2, player1, rand, rand.countOnesAndNameState());
 
-        // Define the maximum depth of the game tree
-        int maxDepth = 2; // Change this value according to your needs
-
-        // Determine whether the computer is the maximizing player
-        boolean isMaximizingPlayer = true; // The computer is always the maximizing player
+        int maxDepth = 2;
+        boolean isMaximizingPlayer = true;
         ExpectimaxAI ai = new ExpectimaxAI();
-        // Call the expectiminimax method
         State bestScore = ai.expectiminimax(state, maxDepth, isMaximizingPlayer);
 
         if (bestScore != null) {
@@ -373,10 +366,9 @@ public class Game {
 
     }
 
-    public void runForOnePlayer(){
-        while (true){
-            System.out.println("___________________"+player1.getPlayRocks()[0].getPlayer().getName()+"___________________");
-//            getUserMove();
+    public void runForOnePlayer() {
+        while (true) {
+            System.out.println("___________________" + player1.getPlayRocks()[0].getPlayer().getName() + "___________________");
             DiceRolls rand1 = new DiceRolls();
             rand1.rollDice();
 
@@ -384,8 +376,7 @@ public class Game {
             Player computer = turn ? player2 : player1;
 
 
-            if (user.hasWon(user.getPlayRocks()))
-            {
+            if (user.hasWon(user.getPlayRocks())) {
                 scanner.close();
                 System.out.println("sahozy : " + user.getName() + " has won the game!");
                 break;
@@ -402,13 +393,13 @@ public class Game {
                 System.out.println("sahozy : Invalid input!");
             }
             turn = !turn;
-            if(turn = !turn){
+            if (turn = !turn) {
                 System.out.println("___________________Computer___________________");
                 getComputerMove();
             }
 
 
-
-        }}
+        }
+    }
 
 }

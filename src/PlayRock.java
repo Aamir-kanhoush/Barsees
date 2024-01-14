@@ -15,15 +15,17 @@ public class PlayRock {
         this.tastee7 = false;
         this.counter = -1;
     }
+
     public PlayRock(PlayRock another) {
-        this.player = another.player; // Assume Player is immutable or you handle it appropriately
-        this.board = another.board; // Assume Board is immutable or you handle it appropriately
+        this.player = another.player;
+        this.board = another.board;
         this.position = another.position;
         this.tastee7 = another.tastee7;
         this.counter = another.counter;
         this.isInTheKitchen = another.isInTheKitchen;
         this.finish = another.finish;
     }
+
     public Player getPlayer() {
         return player;
     }
