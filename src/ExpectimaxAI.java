@@ -6,7 +6,11 @@ public class ExpectimaxAI {
 
     public State expectiminimax(State state, int depth, boolean isMaximizingPlayer) {
         if (depth == 0 || Player.hasWon(state.getCurrentPlayer().getPlayRocks())) {
-            return state;
+            State currentState = state;
+            while (currentState.getParentState().getParentState() != null) {
+                currentState = currentState.getParentState();
+            }
+            return currentState;
         }
 
         if (isMaximizingPlayer) {
@@ -24,13 +28,24 @@ public class ExpectimaxAI {
         } else {
             List<State> childStates = state.getNextStatesWithProbabilities();
             float sumValue = 0;
-            State representativeState = null;
+            float maxExpectedValue = Float.NEGATIVE_INFINITY;
+            State bestRepresentativeState = null;
+
+            Map<State, Float> stateProbabilities = new HashMap<>();
+
             for (State childState : childStates) {
                 State candidateState = expectiminimax(childState, depth - 1, true);
-                sumValue += evaluateState(candidateState);
-                representativeState = candidateState; // Just to have a state to return
+                float value = evaluateState(candidateState);
+
+                stateProbabilities.merge(candidateState, value, Float::sum);
+
+                float expectedValue = stateProbabilities.get(candidateState);
+                if (expectedValue > maxExpectedValue) {
+                    maxExpectedValue = expectedValue;
+                    bestRepresentativeState = candidateState;
+                }
             }
-            return representativeState; // This is not exactly meaningful in expectiminimax context, as it's a chance node
+            return bestRepresentativeState;
         }
     }
 

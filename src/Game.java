@@ -28,13 +28,8 @@ public class Game {
         while (true) {
             Player currentPlayer = turn ? player1 : player2;
             Player otherPlayer = turn ? player2 : player1;
-
             DiceRolls rand = new DiceRolls();
             rand.rollDice();
-
-
-//            State state = new State(board,currentPlayer,otherPlayer,true,rand);
-//            List<State> nextStates= state.getNextStates();
             if (currentPlayer.hasWon(currentPlayer.getPlayRocks())) {
                 scanner.close();
                 System.out.println("sahozy : " + currentPlayer.getName() + " has won the game!");
@@ -190,13 +185,11 @@ public class Game {
                 temp.rollDice(); // Roll the dice for the new object
                 diceResult=temp.countOnesAndNameState();
 
-                System.out.println("ya khara");
                 temp.printState();
                 wel3t.add(temp); // Add the new object to the list
 
                 if (diceResult.equals("Shakka") || diceResult.equals("Dest") ||
                         diceResult.equals("Bunja") || diceResult.equals("Bara")) {
-                    System.out.println("shno hatha");
                     DiceRolls temp2 = new DiceRolls();
                     temp2.rollDice();
                     diceResult=temp2.countOnesAndNameState();
@@ -332,10 +325,34 @@ public class Game {
 
     private void getComputerMove() {
 //        System.out.println("kkk");
-        DiceRolls rand2 = new DiceRolls();
-        rand2.rollDice();
+        DiceRolls rand = new DiceRolls();
+        rand.rollDice();
+        rand.printState();
+        boolean notAllRocksOutBoard = false;
 
-        State state = new State(board,player2,player1,rand2,rand2.countOnesAndNameState());
+        for (PlayRock rock : player2.getPlayRocks()) {
+
+            if (rock.getPosition() != -1) {
+                System.out.println(rock.getPosition());
+                notAllRocksOutBoard = true;
+                break;
+            }
+
+        }
+        if (!notAllRocksOutBoard) {
+            for (int j = 0; j <= 1; j++) {
+                if (rand.countOnesAndNameState() != "Dest" && rand.countOnesAndNameState() != "Bunja") {
+                    rand.rollDice();
+                    rand.printState();
+                }
+            }
+            if (rand.countOnesAndNameState() != "Dest" && rand.countOnesAndNameState() != "Bunja") {
+                return;
+            }
+        }
+        System.out.println("Computer rolled a :");
+
+        State state = new State(board,player2,player1,rand,rand.countOnesAndNameState());
 
         // Define the maximum depth of the game tree
         int maxDepth = 2; // Change this value according to your needs
@@ -345,21 +362,20 @@ public class Game {
         ExpectimaxAI ai = new ExpectimaxAI();
         // Call the expectiminimax method
         State bestScore = ai.expectiminimax(state, maxDepth, isMaximizingPlayer);
-        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh " + bestScore);
+
         if (bestScore != null) {
-            board = bestScore.getBoard();
-            player1 = bestScore.getOtherPlayer();
-            player2 = bestScore.getCurrentPlayer();
+
+            board = bestScore.getParentState().getBoard();
+            player1 = bestScore.getParentState().getOtherPlayer();
+            player2 = bestScore.getParentState().getCurrentPlayer();
             board.printBoard();
-            // Use the best score to make the move
-            // ...
         }
 
     }
 
     public void runForOnePlayer(){
         while (true){
-            System.out.println("___________________"+player1.getName()+"___________________");
+            System.out.println("___________________"+player1.getPlayRocks()[0].getPlayer().getName()+"___________________");
 //            getUserMove();
             DiceRolls rand1 = new DiceRolls();
             rand1.rollDice();
